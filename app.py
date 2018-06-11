@@ -19,17 +19,22 @@ def index():
 
 class User(Resource):
     def get(self, username):
+        print("get method")
         user = user_collection.find_one({"username":username})
         json_user = json.loads(dumps(user))
         return json_user
 
     def put(self, username):
-
+        print("put method")
         json_user = request.get_json()
+        print("json_user: " + json_user)
+
         username_req = json_user["username"]
+        print("username_req: " + username_req)
+
         user = user_collection.find_one({"username": username_req})
 
-        updated_user = user_collection.insert_one({"username": username_req}, {"$set": json_user},
+        updated_user = user_collection.find_one_and_update({"username": username_req}, {"$set": json_user},
                                                                          return_document=ReturnDocument.AFTER)
         json_user_update = json.loads(dumps(updated_user))
         return json_user_update
